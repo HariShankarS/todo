@@ -1,0 +1,4 @@
+$('.create-subtask').bind('ajax:success', function(){
+  $(this).closest('.create-subtask').hide();
+  $(this).closest('.show-task').html('<%= j render template: "tasks/show" %>');
+});

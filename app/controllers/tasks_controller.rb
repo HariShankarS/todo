@@ -26,12 +26,13 @@ class TasksController < ApplicationController
   # POST /tasks
   # POST /tasks.json
   def create
-    @task = Task.new(task_params)
+    @subtask = Task.new(task_params)
 
     respond_to do |format|
-      if @task.save
+      if @subtask.save
+        @task = Task.find_by_id(@subtask.parent_id) || @subtask
         format.html { redirect_to @task, notice: 'Task was successfully created.' }
-        format.json { render :show, status: :created, location: @task }
+        format.js { render :layout => false }
       else
         format.html { render :new }
         format.json { render json: @task.errors, status: :unprocessable_entity }
@@ -42,13 +43,30 @@ class TasksController < ApplicationController
   # PATCH/PUT /tasks/1
   # PATCH/PUT /tasks/1.json
   def update
-    respond_to do |format|
+    if @task.parent_id.present?
       if @task.update(task_params)
-        format.html { redirect_to @task, notice: 'Task was successfully updated.' }
-        format.json { render :show, status: :ok, location: @task }
+        @task = Task.find_by_id(@task.parent_id)
+        respond_to do |format|
+          format.html { redirect_to @task, notice: 'Task was successfully updated.' }
+          format.json { render :show, status: :ok, location: @task }
+        end
       else
-        format.html { render :edit }
-        format.json { render json: @task.errors, status: :unprocessable_entity }
+        respond_to do |format|
+          format.html { render :edit }
+          format.json { render json: @task.errors, status: :unprocessable_entity }
+        end
+      end      
+    else
+      if @task.update(task_params)
+        respond_to do |format|
+          format.html { redirect_to @task, notice: 'Task was successfully updated.' }
+          format.json { render :show, status: :ok, location: @task }
+        end
+      else
+        respond_to do |format|
+          format.html { render :edit }
+          format.json { render json: @task.errors, status: :unprocessable_entity }
+        end
       end
     end
   end
@@ -57,16 +75,27 @@ class TasksController < ApplicationController
   # DELETE /tasks/1.json
   def destroy
     @task.destroy
-    respond_to do |format|
-      format.html { redirect_to tasks_url, notice: 'Task was successfully destroyed.' }
-      format.json { head :no_content }
-    end
+    if @task.parent_id.present?
+      @task = Task.find_by_id(@task.parent_id)
+      respond_to do |format|
+        format.html { redirect_to @task, notice: 'Task was successfully destroyed.' }
+        format.json { head :no_content }
+      end
+    else
+      respond_to do |format|
+        format.html { redirect_to tasks_path, notice: 'Task was successfully destroyed.' }
+        format.json { head :no_content }
+      end
+    end      
   end
 
 
   def newsubtask
     @subtasks = @task.subtasks
     @subtask = @subtasks.new
+    respond_to do |format|
+      format.js { render :layout => false }
+    end   
   end
 
 

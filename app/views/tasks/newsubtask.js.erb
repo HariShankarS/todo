@@ -1,0 +1,4 @@
+$('.add_subtask').bind('ajax:success', function(){
+  $(this).closest('.add_subtask').hide();
+  $(this).closest('.add-subtask').html('<div class="create-subtask"><h3> New SubTask </h3><%= j render partial: "form", locals: {task: @subtask} %></div>');
+});

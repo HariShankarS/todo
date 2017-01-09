@@ -1,3 +1,4 @@
+<div class="show-task">
 <h2>Task </h2>
 <p>
   Work:
@@ -6,7 +7,11 @@
 
 <p>
   Finished:
-  <%= @task.percent_finished %>%
+  <% if @task.subtasks.present? %>
+    <%= number_to_percentage(@task.percent_finished, precision: 1) %>
+  <% else %>
+    0 %
+  <% end -%>
 </p>
 <%= link_to 'Edit', edit_task_path(@task) %> |
 <%= link_to 'Destroy', task_path(@task), :confirm => 'Are you sure?', :method => :delete %> |
@@ -14,13 +19,16 @@
 
 <% if @task.parent_id.nil? %>
   <h4>Sub Tasks</h4>
-  <% if @subtasks.present? %>
-    <% @subtasks.each do |subtask| %>
+  <% if @task.subtasks.present? %>
+    <% @task.subtasks.each do |subtask| %>
       <%= subtask.work %>
       <%= subtask.finished %><br>
       <%= link_to "Edit Subtask",edit_task_path(parent_id: @task.id, id: subtask.id) %> |
-      <%= link_to "Destroy Subtask",task_path(subtask), :confirm => 'Are you sure?', :method => :delete  %><br>
+      <%= link_to "Destroy Subtask",task_path(subtask), :confirm => 'Are you sure?', :method => :delete %><br>
     <% end -%>
   <% end -%>
-  <%= link_to "Add Subtask",newsubtask_task_path(parent_id: @task.id) %>
+  <div class="add-subtask">
+    <%= link_to "Add Subtask",newsubtask_task_path(parent_id: @task.id, id: @task.id),method: :get,remote: true, class: "add_subtask" %>
+  </div>
 <% end -%>
+</div>

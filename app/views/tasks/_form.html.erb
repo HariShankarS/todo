@@ -11,16 +11,16 @@
     </div>
   <% end %>
 
-  <div class="field">
+  <div class="form-group">
     <%= f.label :work %><br>
-    <%= f.text_field :work %>
+    <%= f.text_field :work, :class => "form-control"  %>
   </div>
-  <div class="field">
+  <div class="form-group">
     <%= f.label :finished %><br>
     <%= f.check_box :finished %>
     <%= f.hidden_field(:parent_id, :value => task.parent_id) %>
   </div>
   <div class="actions">
-    <%= f.submit %>
+    <%= f.submit :class => "btn btn-raised btn-info"  %>
   </div>
 <% end %>

@@ -1,0 +1,26 @@
+<h2>Task </h2>
+<p>
+  Work:
+  <%= @task.work %>
+</p>
+
+<p>
+  Finished:
+  <%= @task.percent_finished %>%
+</p>
+<%= link_to 'Edit', edit_task_path(@task) %> |
+<%= link_to 'Destroy', task_path(@task), :confirm => 'Are you sure?', :method => :delete %> |
+<%= link_to 'Back', tasks_path %>
+
+<% if @task.parent_id.nil? %>
+  <h4>Sub Tasks</h4>
+  <% if @subtasks.present? %>
+    <% @subtasks.each do |subtask| %>
+      <%= subtask.work %>
+      <%= subtask.finished %><br>
+      <%= link_to "Edit Subtask",edit_task_path(parent_id: @task.id, id: subtask.id) %> |
+      <%= link_to "Destroy Subtask",task_path(subtask), :confirm => 'Are you sure?', :method => :delete  %><br>
+    <% end -%>
+  <% end -%>
+  <%= link_to "Add Subtask",newsubtask_task_path(parent_id: @task.id) %>
+<% end -%>

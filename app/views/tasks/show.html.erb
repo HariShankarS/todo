@@ -1,35 +1,49 @@
 <div class="show-task">
-  
-  <h2>Task </h2>
-  <p>
-    Work:
-    <%= @task.work %>
-  </p>
-
-  <p>
-    Finished:
-    <% if @task.subtasks.present? %>
-      <%= number_to_percentage(@task.percent_finished, precision: 1) %>
-    <% else %>
-      0 %
-    <% end -%>
-  </p>
-  <%= link_to 'Edit', edit_task_path(@task) %> |
-  <%= link_to 'Destroy', task_path(@task), :confirm => 'Are you sure?', :method => :delete %> |
-  <%= link_to 'Back', tasks_path %>
-
-  <% if @task.parent_id.nil? %>
-    <h4>Sub Tasks</h4>
-    <% if @task.subtasks.present? %>
-      <% @task.subtasks.each do |subtask| %>
-        <%= subtask.work %>
-        <%= subtask.finished %><br>
-        <%= link_to "Edit Subtask",edit_task_path(parent_id: @task.id, id: subtask.id) %> |
-        <%= link_to "Destroy Subtask",task_path(subtask), :confirm => 'Are you sure?', :method => :delete %><br>
-      <% end -%>
-    <% end -%>
-    <div class="add-subtask">
-      <%= link_to "Add Subtask",newsubtask_task_path(parent_id: @task.id, id: @task.id),method: :get,remote: true, class: "add_subtask" %>
+  <div class="container-fluid order">
+    <div class="row">
+      <div class="col-md-6 col-md-offset-3">
+        <div class="well well-md">
+          <h2>Task </h2>
+          <div class="main">
+            <p>
+              <h2><%= @task.work.upcase %></h2>
+            </p>
+            <h4>
+              <% if @task.subtasks.present? %>
+                <%= number_to_percentage(@task.percent_finished, precision: 1) %>
+              <% else %>
+                0 %
+              <% end -%>
+            </h4>
+            <%= link_to 'Edit', edit_task_path(@task) %> |
+            <%= link_to 'Destroy', task_path(@task), :confirm => 'Are you sure?', :method => :delete %> |
+            <%= link_to 'Back', tasks_path %>
+          </div><br>
+          <% if @task.parent_id.nil? %>
+            <h4>Sub Tasks</h4>
+            <% if @task.subtasks.present? %>
+              <% @task.subtasks.each do |subtask| %>
+              <div class="main">
+                <h3><%= subtask.work.capitalize %> <br></h3>
+                <h4>
+                  <% if subtask.finished? %>
+                    100 %
+                  <% else %>
+                    0%
+                  <% end -%>
+                </h4>
+                <br>
+                <%= link_to "Edit Subtask",edit_task_path(parent_id: @task.id, id: subtask.id) %> |
+                <%= link_to "Destroy Subtask",task_path(subtask), :confirm => 'Are you sure?', :method => :delete %><br>
+              </div>
+              <% end -%>
+            <% end -%>
+            <div class="add-subtask">
+              <%= link_to "Add Subtask",newsubtask_task_path(parent_id: @task.id, id: @task.id),method: :get,remote: true, class: "add_subtask" %>
+            </div>
+          <% end -%>
+        </div>
+      </div>
     </div>
-  <% end -%>
+  </div>          
 </div>

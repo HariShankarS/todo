@@ -17,7 +17,6 @@
             </h4>
             <%= link_to 'Edit', edit_task_path(@task) %> |
             <%= link_to 'Destroy', task_path(@task), :confirm => 'Are you sure?', :method => :delete %> |
-            <%= link_to 'Back', tasks_path %>
           </div><br>
           <% if @task.parent_id.nil? %>
             <h4>Sub Tasks</h4>
@@ -47,3 +46,4 @@
     </div>
   </div>          
 </div>
+<%= link_to 'Back', tasks_path, class: "btn btn-raised btn-primary" %>
